@@ -1,0 +1,9 @@
+{
+  "name": "sds",
+  "version": "0.0.0",
+  "repo": "chrisdew/sds",
+  "description": "Simple Dynamic Strings library for C",
+  "keywords": ["strings", "string"],
+  "license": "BSD",
+  "src": ["sds.h", "sds.c"]
+}
