@@ -36,6 +36,19 @@
 
 #include "sds.h"
 
+/* 
+ * FreeBSD's libc often uses unsigned ints where glibc doesn't. size_t,
+ * return of strlen, etc.
+ */
+#ifdef __FreeBSD__
+typedef unsigned int INT;
+#endif
+#else
+typedef int INT;
+#endif
+/* TODO: Expand tests for other BSDs as they may share this difference. */
+
+
 /* Create a new sds string with the content specified by the 'init' pointer
  * and 'initlen'.
  * If NULL is used for 'init' the string is initialized with zero bytes.
@@ -104,7 +117,7 @@ void sdsfree(sds s) {
  * remains 6 bytes. */
 void sdsupdatelen(sds s) {
     struct sdshdr *sh = (void*) (s-sizeof *sh);;
-    int reallen = strlen(s);
+    INT reallen = strlen(s);
     sh->free += (sh->len-reallen);
     sh->len = reallen;
 }
@@ -197,7 +210,7 @@ size_t sdsAllocSize(sds s) {
  * ... check for nread <= 0 and handle it ...
  * sdsIncrLen(s, nread);
  */
-void sdsIncrLen(sds s, int incr) {
+void sdsIncrLen(sds s, INT incr) {
     struct sdshdr *sh = (void*) (s-sizeof *sh);;
 
     assert(sh->free >= incr);
